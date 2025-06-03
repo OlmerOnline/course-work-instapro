@@ -24,7 +24,10 @@ export function renderHeaderComponent({ element }) {
       </button>
       ${
           user
-              ? `<button title="${user.name}" class="header-button logout-button">Выйти</button>`
+              ? `<div>
+                    <p>${user.name}</p>
+                    <button title="${user.name}" class="header-button logout-button">Выйти</button>
+                </div>`
               : ''
       }  
   </div>

@@ -5,12 +5,12 @@ import { formatDistanceToNow } from 'date-fns';
 import { ru } from 'date-fns/locale';
 
 export function renderPostsPageComponent({ appEl }) {
-    // @TODO: реализовать рендер постов из api
-    console.log('Актуальный список постов:', posts);
+    let appHtml = '';
 
-    const appHtml = posts
-        .map((post) => {
-            return `
+    if (posts.length > 0) {
+        appHtml = posts
+            .map((post) => {
+                return `
           <div class="page-container">
             <div class="header-container"></div>
             <ul class="posts">
@@ -43,8 +43,15 @@ export function renderPostsPageComponent({ appEl }) {
             </ul>
           </div>
         `;
-        })
-        .join('');
+            })
+            .join('');
+    } else {
+        appHtml = `
+          <div class="page-container">
+            <div class="header-container"></div>
+          </div>
+        `;
+    }
 
     appEl.innerHTML = appHtml;
 
