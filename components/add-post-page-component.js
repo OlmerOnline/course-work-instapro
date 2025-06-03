@@ -1,8 +1,7 @@
-import { addPost } from '../api.js';
 import { renderHeaderComponent } from './header-component.js';
 import { renderUploadImageComponent } from './upload-image-component.js';
 
-export function renderAddPostPageComponent({ appEl, token, onAddPostClick }) {
+export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
     let imageUrl = '';
 
     const render = () => {
@@ -60,9 +59,12 @@ export function renderAddPostPageComponent({ appEl, token, onAddPostClick }) {
                 alert('Выберите фото');
                 return;
             }
-            addPost(token, description.value, imageUrl);
+            // addPost(token, description.value, imageUrl);
 
-            onAddPostClick();
+            onAddPostClick({
+                description: description.value,
+                imageUrl: imageUrl,
+            });
         });
     };
 
