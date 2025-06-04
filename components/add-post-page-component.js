@@ -1,3 +1,4 @@
+import { replaceHtmlTags } from '../helpers.js';
 import { renderHeaderComponent } from './header-component.js';
 import { renderUploadImageComponent } from './upload-image-component.js';
 
@@ -61,7 +62,7 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
             }
 
             onAddPostClick({
-                description: description.value,
+                description: replaceHtmlTags(description.value),
                 imageUrl: imageUrl,
             });
         });

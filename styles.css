@@ -23,6 +23,12 @@
     margin-bottom: 8px;
 }
 
+.header__user-container {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
 .header-button {
     padding: 0;
     border: none;
@@ -34,7 +40,7 @@
 }
 
 .logout-button {
-    width: 130px;
+    /* width: 130px; */
     text-align: right;
 }
 
@@ -199,4 +205,11 @@
     box-sizing: border-box;
     width: 100%;
     text-align: center;
+}
+
+@media (max-width: 500px) {
+    .post-image-container {
+        width: 100vw;
+        height: auto;
+    }
 }
