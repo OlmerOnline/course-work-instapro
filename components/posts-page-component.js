@@ -3,13 +3,14 @@ import { renderHeaderComponent } from './header-component.js';
 import { posts, goToPage } from '../index.js';
 import { formatDistanceToNow } from 'date-fns';
 import { ru } from 'date-fns/locale';
+import { likePost } from '../api.js';
 
-export function renderPostsPageComponent({ appEl }) {
+export function renderPostsPageComponent({ appEl }, token) {
     let appHtml = '';
 
     if (posts.length > 0) {
         appHtml = posts
-            .map((post) => {
+            .map((post, index) => {
                 return `
           <div class="page-container">
             <div class="header-container"></div>
@@ -24,7 +25,7 @@ export function renderPostsPageComponent({ appEl }) {
                   <img class="post-image" src="${post.imageUrl}">
                 </div>
                 <div class="post-likes">
-                  <button data-post-id="${post.id}" class="like-button">
+                  <button data-post-index="${index}" class="like-button">
                     <img src="./assets/images/${post.isLiked ? 'like-active.svg' : 'like-not-active.svg'}">
                   </button>
                   <p class="post-likes-text">
@@ -64,6 +65,30 @@ export function renderPostsPageComponent({ appEl }) {
             goToPage(USER_POSTS_PAGE, {
                 userId: userEl.dataset.userId,
             });
+        });
+    }
+
+    for (let btnElem of document.querySelectorAll('.like-button')) {
+        btnElem.addEventListener('click', () => {
+            const index = btnElem.dataset.postIndex;
+            const img = btnElem.querySelector('img');
+            const countLikesElem =
+                document.querySelectorAll('.post-likes-text')[index];
+
+            likePost({ token }, posts[index].id, posts[index].isLiked).then(
+                (data) => {
+                    posts[index].likes = data.likes;
+                    posts[index].isLiked = data.isLiked;
+
+                    if (posts[index].isLiked) {
+                        img.src = './assets/images/like-active.svg';
+                    } else {
+                        img.src = './assets/images/like-not-active.svg';
+                    }
+
+                    countLikesElem.innerHTML = `Нравится: <strong>${posts[index].likes.length}</strong>`;
+                },
+            );
         });
     }
 }

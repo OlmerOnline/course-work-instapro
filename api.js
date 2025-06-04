@@ -38,7 +38,6 @@ export function getUserPosts({ token }, userId) {
             return response.json();
         })
         .then((data) => {
-            console.log(data.posts);
             return data.posts;
         });
 }
@@ -102,4 +101,25 @@ export function uploadImage({ file }) {
     }).then((response) => {
         return response.json();
     });
+}
+
+export function likePost({ token }, postId, isLiked) {
+    const flag = isLiked ? 'dislike' : 'like';
+
+    return fetch(`${postsHost}/${postId}/${flag}`, {
+        method: 'POST',
+        headers: {
+            Authorization: token,
+        },
+    })
+        .then((response) => {
+            if (response.status === 401) {
+                throw new Error('Нет авторизации');
+            }
+
+            return response.json();
+        })
+        .then((data) => {
+            return data.post;
+        });
 }

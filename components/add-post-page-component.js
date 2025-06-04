@@ -59,7 +59,6 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
                 alert('Выберите фото');
                 return;
             }
-            // addPost(token, description.value, imageUrl);
 
             onAddPostClick({
                 description: description.value,
