@@ -58,6 +58,19 @@ export function addPost({ token }, description, imageUrl) {
     });
 }
 
+export function deletePost({ token }, postId) {
+    return fetch(`${postsHost}/${postId}`, {
+        method: 'DELETE',
+        headers: { Authorization: token },
+    }).then((response) => {
+        if (response.status === 401) {
+            throw new Error('Нет авторизации');
+        }
+
+        return;
+    });
+}
+
 export function registerUser({ login, password, name, imageUrl }) {
     return fetch(baseHost + '/api/user', {
         method: 'POST',

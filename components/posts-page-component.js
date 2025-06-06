@@ -1,9 +1,9 @@
 import { USER_POSTS_PAGE } from '../routes.js';
 import { renderHeaderComponent } from './header-component.js';
-import { posts, goToPage } from '../index.js';
+import { posts, goToPage, user } from '../index.js';
 import { formatDistanceToNow } from 'date-fns';
 import { ru } from 'date-fns/locale';
-import { likePost } from '../api.js';
+import { deletePost, likePost } from '../api.js';
 
 export function renderPostsPageComponent({ appEl }, token) {
     let appHtml = '';
@@ -18,26 +18,34 @@ export function renderPostsPageComponent({ appEl }, token) {
 
               <li class="post">
                 <div class="post-header" data-user-id="${post.user.id}">
-                    <img src="${post.user.imageUrl}" class="post-header__user-image">
-                    <p class="post-header__user-name">${post.user.name}</p>
+                    <div class="post-header__user">
+                        <img src="${post.user.imageUrl}" class="post-header__user-image">
+                        <p class="post-header__user-name">${post.user.name}</p>
+                    </div>
+                    
+                    <img data-index="${index}" class="post-header__menu-btn" src="./assets/images/3dots.png">
+
+                    <div id="menu-${index}" style="display: none;" class="post-header-menu">
+                        <button data-index="${index}" class="post-header__delete">Удалить</button>
+                    </div>
                 </div>
                 <div class="post-image-container">
-                  <img class="post-image" src="${post.imageUrl}">
+                    <img class="post-image" src="${post.imageUrl}">
                 </div>
                 <div class="post-likes">
-                  <button data-post-index="${index}" class="like-button">
-                    <img src="./assets/images/${post.isLiked ? 'like-active.svg' : 'like-not-active.svg'}">
-                  </button>
-                  <p class="post-likes-text">
-                    Нравится: <strong>${post.likes.length}</strong>
-                  </p>
+                    <button data-post-index="${index}" class="like-button">
+                        <img src="./assets/images/${post.isLiked ? 'like-active.svg' : 'like-not-active.svg'}">
+                    </button>
+                    <p class="post-likes-text">
+                        Нравится: <strong>${post.likes.length}</strong>
+                    </p>
                 </div>
                 <p class="post-text">
-                  <span class="user-name">${post.user.name}</span>
-                  ${post.description}
+                    <span class="user-name">${post.user.name}</span>
+                    ${post.description}
                 </p>
                 <p class="post-date">
-                  ${formatDistanceToNow(post.createdAt, { locale: ru })}
+                    ${formatDistanceToNow(post.createdAt, { locale: ru })}
                 </p>
               </li>
 
@@ -91,4 +99,42 @@ export function renderPostsPageComponent({ appEl }, token) {
             );
         });
     }
+
+    for (let btnMenu of document.querySelectorAll('.post-header__menu-btn')) {
+        btnMenu.addEventListener('click', (event) => {
+            event.stopPropagation();
+
+            const index = btnMenu.dataset.index;
+
+            if (posts[index].user.id === user._id) {
+                console.log('user confirm');
+
+                const menu = document.getElementById(`menu-${index}`);
+                menu.style.display =
+                    menu.style.display === 'none' ? 'flex' : 'none';
+            } else {
+                console.log('user not confirm');
+            }
+        });
+    }
+
+    for (let btnDelete of document.querySelectorAll('.post-header__delete')) {
+        btnDelete.addEventListener('click', (event) => {
+            event.stopPropagation();
+
+            if (user) {
+                const index = btnDelete.dataset.index;
+                const isConfirm = confirm('Вы подтверждаете удаление?');
+                if (isConfirm) {
+                    deletePost({ token }, posts[index].id);
+                }
+            }
+        });
+    }
+}
+
+{
+    /* <button data-index="${index}" class="post-header__menu-btn">
+                        Меню
+                    </button> */
 }

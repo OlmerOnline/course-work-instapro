@@ -55,6 +55,7 @@
 .post-header {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
     cursor: pointer;
@@ -128,6 +129,12 @@
     margin-bottom: 12px;
 }
 
+.post-header__user {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
 .posts-user-header__user-image {
     width: 70px;
     height: 70px;
@@ -139,6 +146,11 @@
 .posts-user-header__user-name {
     font-size: 28px;
     line-height: 35px;
+}
+
+.post-header__menu-btn {
+    width: 30px;
+    height: 30px;
 }
 
 .loading-page {
