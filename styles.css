@@ -153,6 +153,29 @@
     height: 30px;
 }
 
+.post-header__user-menu {
+    position: relative;
+    cursor: pointer;
+}
+
+.post-header__menu {
+    position: absolute;
+    top: 2px;
+    right: 25px;
+}
+
+.post-header__btn-delete {
+    display: block;
+    padding: 5px 5px 5px;
+    font-size: 18px;
+    line-height: 22px;
+    border-radius: 5px;
+    background-color: #565eef;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+}
+
 .loading-page {
     display: flex;
     justify-content: center;

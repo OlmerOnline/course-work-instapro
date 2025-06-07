@@ -1,9 +1,9 @@
-import { USER_POSTS_PAGE } from '../routes.js';
+import { DELETE_POST_PAGE, USER_POSTS_PAGE } from '../routes.js';
 import { renderHeaderComponent } from './header-component.js';
 import { posts, goToPage, user } from '../index.js';
 import { formatDistanceToNow } from 'date-fns';
 import { ru } from 'date-fns/locale';
-import { deletePost, likePost } from '../api.js';
+import { likePost } from '../api.js';
 
 export function renderPostsPageComponent({ appEl }, token) {
     let appHtml = '';
@@ -22,11 +22,11 @@ export function renderPostsPageComponent({ appEl }, token) {
                         <img src="${post.user.imageUrl}" class="post-header__user-image">
                         <p class="post-header__user-name">${post.user.name}</p>
                     </div>
-                    
-                    <img data-index="${index}" class="post-header__menu-btn" src="./assets/images/3dots.png">
-
-                    <div id="menu-${index}" style="display: none;" class="post-header-menu">
-                        <button data-index="${index}" class="post-header__delete">Удалить</button>
+                    <div class="post-header__user-menu">
+                        <img data-index="${index}" class="post-header__menu-btn" src="./assets/images/3dots.png">
+                        <div id="menu-${index}" style="display: none" class="post-header__menu">
+                            <button data-index="${index}" class="post-header__btn-delete">Удалить</button>
+                        </div>
                     </div>
                 </div>
                 <div class="post-image-container">
@@ -107,18 +107,16 @@ export function renderPostsPageComponent({ appEl }, token) {
             const index = btnMenu.dataset.index;
 
             if (posts[index].user.id === user._id) {
-                console.log('user confirm');
-
                 const menu = document.getElementById(`menu-${index}`);
                 menu.style.display =
                     menu.style.display === 'none' ? 'flex' : 'none';
-            } else {
-                console.log('user not confirm');
             }
         });
     }
 
-    for (let btnDelete of document.querySelectorAll('.post-header__delete')) {
+    for (let btnDelete of document.querySelectorAll(
+        '.post-header__btn-delete',
+    )) {
         btnDelete.addEventListener('click', (event) => {
             event.stopPropagation();
 
@@ -126,15 +124,9 @@ export function renderPostsPageComponent({ appEl }, token) {
                 const index = btnDelete.dataset.index;
                 const isConfirm = confirm('Вы подтверждаете удаление?');
                 if (isConfirm) {
-                    deletePost({ token }, posts[index].id);
+                    goToPage(DELETE_POST_PAGE, { postId: posts[index].id });
                 }
             }
         });
     }
-}
-
-{
-    /* <button data-index="${index}" class="post-header__menu-btn">
-                        Меню
-                    </button> */
 }

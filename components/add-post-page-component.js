@@ -60,7 +60,6 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
                 alert('Выберите фото');
                 return;
             }
-
             onAddPostClick({
                 description: replaceHtmlTags(description.value),
                 imageUrl: imageUrl,

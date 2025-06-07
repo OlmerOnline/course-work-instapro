@@ -1,9 +1,10 @@
-import { addPost, getPosts, getUserPosts } from './api.js';
+import { addPost, deletePost, getPosts, getUserPosts } from './api.js';
 import { renderAddPostPageComponent } from './components/add-post-page-component.js';
 import { renderAuthPageComponent } from './components/auth-page-component.js';
 import {
     ADD_POSTS_PAGE,
     AUTH_PAGE,
+    DELETE_POST_PAGE,
     LOADING_PAGE,
     POSTS_PAGE,
     USER_POSTS_PAGE,
@@ -43,6 +44,7 @@ export const goToPage = (newPage, data) => {
             ADD_POSTS_PAGE,
             USER_POSTS_PAGE,
             LOADING_PAGE,
+            DELETE_POST_PAGE,
         ].includes(newPage)
     ) {
         if (newPage === ADD_POSTS_PAGE) {
@@ -73,9 +75,35 @@ export const goToPage = (newPage, data) => {
 
             return getUserPosts({ token: getToken() }, data.userId)
                 .then((newPosts) => {
-                    page = USER_POSTS_PAGE;
                     posts = newPosts;
-                    renderApp();
+
+                    if (posts.length > 0) {
+                        page = USER_POSTS_PAGE;
+                        renderApp();
+                    } else {
+                        page = POSTS_PAGE;
+                        goToPage(page);
+                    }
+                })
+                .catch((error) => {
+                    console.error(error);
+                    goToPage(POSTS_PAGE);
+                });
+        }
+
+        if (newPage === DELETE_POST_PAGE) {
+            page = LOADING_PAGE;
+            renderApp();
+
+            return deletePost({ token: getToken() }, data.postId)
+                .then(() => {
+                    if (data.userId) {
+                        page = USER_POSTS_PAGE;
+                        goToPage(USER_POSTS_PAGE, { userId: data.userId });
+                    } else {
+                        page = POSTS_PAGE;
+                        goToPage(POSTS_PAGE);
+                    }
                 })
                 .catch((error) => {
                     console.error(error);

@@ -1,8 +1,9 @@
 import { renderHeaderComponent } from './header-component.js';
-import { posts } from '../index.js';
+import { goToPage, posts, user } from '../index.js';
 import { formatDistanceToNow } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { likePost } from '../api.js';
+import { DELETE_POST_PAGE } from '../routes.js';
 
 export function renderUserPostsPageComponent({ appEl }, token) {
     window.scrollTo(0, 0);
@@ -19,8 +20,16 @@ export function renderUserPostsPageComponent({ appEl }, token) {
 
               <li class="post">
                 <div class="post-header post-header_user" data-user-id="${post.user.id}">
-                    <img src="${post.user.imageUrl}" class="post-header__user-image">
-                    <p class="post-header__user-name">${post.user.name}</p>
+                    <div class="post-header__user">
+                        <img src="${post.user.imageUrl}" class="post-header__user-image">
+                        <p class="post-header__user-name">${post.user.name}</p>
+                    </div>
+                    <div class="post-header__user-menu">
+                        <img data-index="${index}" class="post-header__menu-btn" src="./assets/images/3dots.png">
+                        <div id="menu-${index}" style="display: none" class="post-header__menu">
+                            <button data-index="${index}" class="post-header__btn-delete">Удалить</button>
+                        </div>
+                    </div>
                 </div>
                 <div class="post-image-container">
                   <img class="post-image" src="${post.imageUrl}">
@@ -82,6 +91,39 @@ export function renderUserPostsPageComponent({ appEl }, token) {
                     countLikesElem.innerHTML = `Нравится: <strong>${posts[index].likes.length}</strong>`;
                 },
             );
+        });
+    }
+
+    for (let btnMenu of document.querySelectorAll('.post-header__menu-btn')) {
+        btnMenu.addEventListener('click', (event) => {
+            event.stopPropagation();
+
+            const index = btnMenu.dataset.index;
+
+            if (posts[index].user.id === user._id) {
+                const menu = document.getElementById(`menu-${index}`);
+                menu.style.display =
+                    menu.style.display === 'none' ? 'flex' : 'none';
+            }
+        });
+    }
+
+    for (let btnDelete of document.querySelectorAll(
+        '.post-header__btn-delete',
+    )) {
+        btnDelete.addEventListener('click', (event) => {
+            event.stopPropagation();
+
+            if (user) {
+                const index = btnDelete.dataset.index;
+                const isConfirm = confirm('Вы подтверждаете удаление?');
+                if (isConfirm) {
+                    goToPage(DELETE_POST_PAGE, {
+                        postId: posts[index].id,
+                        userId: posts[index].user.id,
+                    });
+                }
+            }
         });
     }
 }
