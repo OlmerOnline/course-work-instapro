@@ -1,6 +1,7 @@
 import { loginUser, registerUser } from '../api.js';
 import { renderHeaderComponent } from './header-component.js';
 import { renderUploadImageComponent } from './upload-image-component.js';
+import { replaceHtmlTags } from '../helpers.js';
 
 /**
  * Компонент страницы авторизации.
@@ -119,8 +120,8 @@ export function renderAuthPageComponent({ appEl, setUser }) {
                         alert('Введите пароль');
                         return;
                     }
-
-                    loginUser({ login, password })
+                    console.log(replaceHtmlTags(login));
+                    loginUser({ login: replaceHtmlTags(login), password })
                         .then((user) => {
                             setUser(user.user);
                         })
@@ -155,7 +156,12 @@ export function renderAuthPageComponent({ appEl, setUser }) {
                         return;
                     }
 
-                    registerUser({ login, password, name, imageUrl })
+                    registerUser({
+                        login: replaceHtmlTags(login),
+                        password,
+                        name: replaceHtmlTags(name),
+                        imageUrl,
+                    })
                         .then((user) => {
                             setUser(user.user);
                         })
