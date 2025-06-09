@@ -61,7 +61,7 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
                 return;
             }
             onAddPostClick({
-                description: replaceHtmlTags(description.value),
+                description: description.value,
                 imageUrl: imageUrl,
             });
         });

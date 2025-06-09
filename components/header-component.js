@@ -1,3 +1,4 @@
+import { replaceHtmlTags } from '../helpers.js';
 import { goToPage, logout, user } from '../index.js';
 import { ADD_POSTS_PAGE, AUTH_PAGE, POSTS_PAGE } from '../routes.js';
 
@@ -25,8 +26,8 @@ export function renderHeaderComponent({ element }) {
       ${
           user
               ? `<div class="header__user-container">
-                    <p>${user.name}</p>
-                    <button title="${user.name}" class="header-button logout-button">Выйти</button>
+                    <p>${replaceHtmlTags(user.name)} </p>
+                    <button title="${replaceHtmlTags(user.name)}" class="header-button logout-button">Выйти</button>
                 </div>`
               : ''
       }  

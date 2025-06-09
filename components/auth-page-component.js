@@ -121,7 +121,7 @@ export function renderAuthPageComponent({ appEl, setUser }) {
                         return;
                     }
                     console.log(replaceHtmlTags(login));
-                    loginUser({ login: replaceHtmlTags(login), password })
+                    loginUser({ login, password })
                         .then((user) => {
                             setUser(user.user);
                         })
@@ -156,12 +156,7 @@ export function renderAuthPageComponent({ appEl, setUser }) {
                         return;
                     }
 
-                    registerUser({
-                        login: replaceHtmlTags(login),
-                        password,
-                        name: replaceHtmlTags(name),
-                        imageUrl,
-                    })
+                    registerUser({ login, password, name, imageUrl })
                         .then((user) => {
                             setUser(user.user);
                         })

@@ -4,6 +4,7 @@ import { posts, goToPage, user } from '../index.js';
 import { formatDistanceToNow } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { likePost } from '../api.js';
+import { replaceHtmlTags } from '../helpers.js';
 
 export function renderPostsPageComponent({ appEl }, token) {
     let appHtml = '';
@@ -20,7 +21,7 @@ export function renderPostsPageComponent({ appEl }, token) {
                 <div class="post-header" data-user-id="${post.user.id}">
                     <div class="post-header__user">
                         <img src="${post.user.imageUrl}" class="post-header__user-image">
-                        <p class="post-header__user-name">${post.user.name}</p>
+                        <p class="post-header__user-name">${replaceHtmlTags(post.user.name)}</p>
                     </div>
                     <div class="post-header__user-menu">
                         <img data-index="${index}" class="post-header__menu-btn" src="./assets/images/3dots.png">
@@ -41,8 +42,8 @@ export function renderPostsPageComponent({ appEl }, token) {
                     </p>
                 </div>
                 <p class="post-text">
-                    <span class="user-name">${post.user.name}</span>
-                    ${post.description}
+                    <span class="user-name">${replaceHtmlTags(post.user.name)}</span>
+                    ${replaceHtmlTags(post.description)}
                 </p>
                 <p class="post-date">
                     ${formatDistanceToNow(post.createdAt, { locale: ru })}
